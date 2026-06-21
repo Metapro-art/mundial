@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { loadWorldCupSnapshot, computeStandings, buildTeamRef } from './fixtures'
+import {
+  loadWorldCupSnapshot,
+  computeStandings,
+  buildTeamRef,
+  playedResultsAfter,
+} from './fixtures'
 import { TEAMS } from './teams'
 
 const data = loadWorldCupSnapshot()
@@ -76,6 +81,24 @@ describe('computeStandings', () => {
       const ga = rows.reduce((s, r) => s + r.goalsAgainst, 0)
       expect(gf).toBe(ga)
     }
+  })
+})
+
+describe('playedResultsAfter', () => {
+  it('convierte solo partidos jugados posteriores a la fecha, en sede neutral', () => {
+    const all = playedResultsAfter(data.matches, '2000-01-01')
+    const playedCount = data.matches.filter((m) => m.played).length
+    expect(all.length).toBe(playedCount)
+    for (const r of all) {
+      expect(r.neutral).toBe(true) // openfootball no codifica el país de la sede
+      expect(r.competition).toBe('FIFA World Cup')
+      expect(Number.isInteger(r.homeGoals)).toBe(true)
+      expect(Number.isInteger(r.awayGoals)).toBe(true)
+    }
+  })
+
+  it('filtra estrictamente por fecha (futuro lejano => vacío)', () => {
+    expect(playedResultsAfter(data.matches, '2099-01-01')).toHaveLength(0)
   })
 })
 

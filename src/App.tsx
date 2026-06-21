@@ -1,14 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Match, WorldCupData } from './data/types'
-import { loadWorldCup } from './data/fixtures'
+import { loadWorldCup, playedResultsAfter } from './data/fixtures'
+import type { Model, Prediction } from './model'
+
+type PredictFn = (model: Model, home: string, away: string) => Prediction
 import { Tabs, type TabId } from './components/Tabs'
 import { MatchList } from './components/MatchList'
 import { GroupTables } from './components/GroupTables'
 import { Bracket } from './components/Bracket'
 import { MatchPanel } from './components/MatchPanel'
+import { MarketsView } from './components/MarketsView'
 
 type Status = 'loading' | 'ready' | 'error'
 type MatchFilter = 'upcoming' | 'played'
+type ModelStatus = 'idle' | 'loading' | 'ready' | 'error'
 
 export default function App() {
   const [status, setStatus] = useState<Status>('loading')
@@ -40,6 +45,33 @@ export default function App() {
     () => data?.matches.filter((m) => m.stage !== 'group') ?? [],
     [data],
   )
+
+  // --- Modelo (Elo + Dixon-Coles): se carga de forma diferida al abrir el
+  // primer partido, para no inflar el bundle inicial con el corpus histórico.
+  const [model, setModel] = useState<Model | null>(null)
+  const [modelStatus, setModelStatus] = useState<ModelStatus>('idle')
+  const predictRef = useRef<PredictFn | null>(null)
+
+  useEffect(() => {
+    if (!selected || !data || model || modelStatus !== 'idle') return
+    setModelStatus('loading')
+    import('./model')
+      .then((mod) => {
+        const base = mod.buildModel()
+        // refresca con resultados del Mundial más nuevos que el corpus (sin duplicar)
+        const extra = playedResultsAfter(data.matches, base.refDate)
+        predictRef.current = mod.predictMatch
+        setModel(extra.length ? mod.buildModel(extra) : base)
+        setModelStatus('ready')
+      })
+      .catch(() => setModelStatus('error'))
+  }, [selected, data, model, modelStatus])
+
+  const prediction = useMemo<Prediction | null>(() => {
+    if (!selected || !model || !predictRef.current) return null
+    if (!selected.home.known || !selected.away.known) return null
+    return predictRef.current(model, selected.home.name, selected.away.name)
+  }, [selected, model])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pitch-950 to-pitch-900">
@@ -128,11 +160,7 @@ export default function App() {
 
       {selected && (
         <MatchPanel match={selected} onClose={() => setSelected(null)}>
-          <p className="text-center text-sm text-slate-400">
-            Las probabilidades de mercados se calcularán en la{' '}
-            <span className="font-semibold text-emerald-300">Fase 2</span> (modelo Elo +
-            Dixon-Coles).
-          </p>
+          <MarketsView match={selected} prediction={prediction} status={modelStatus} />
         </MatchPanel>
       )}
     </div>

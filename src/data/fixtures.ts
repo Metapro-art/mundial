@@ -1,5 +1,6 @@
 import type {
   GroupDef,
+  IntlResult,
   Match,
   RawMatch,
   RawWorldCup,
@@ -196,4 +197,41 @@ export function computeStandings(matches: Match[], groupLetterArg: string): Stan
       y.goalsFor - x.goalsFor ||
       x.team.localeCompare(y.team),
   )
+}
+
+/**
+ * Partidos del Mundial ya jugados (entre equipos conocidos) con fecha
+ * ESTRICTAMENTE posterior a `afterDate`, convertidos al formato del corpus.
+ * Sirve para refrescar el modelo con resultados más nuevos que el corpus
+ * empaquetado sin duplicar los que ya están en él.
+ *
+ * Se marcan como `neutral: true` a propósito: el JSON de openfootball no
+ * codifica el PAÍS de la sede (solo el nombre del estadio), así que inferir la
+ * localía desde el orden team1/team2 atribuiría mal la ventaja (un anfitrión
+ * listado como visitante jugando en casa, o como local jugando en otro país
+ * anfitrión en eliminatorias). La ventaja de localía del Mundial ya se modela
+ * por identidad en `predictMatch` (solo anfitriones); aquí, para la
+ * actualización marginal de Elo con resultados nuevos, usamos sede neutral
+ * para no sesgar el rating en la dirección equivocada.
+ */
+export function playedResultsAfter(matches: Match[], afterDate: string): IntlResult[] {
+  return matches
+    .filter(
+      (m) =>
+        m.played &&
+        m.home.known &&
+        m.away.known &&
+        m.homeGoals != null &&
+        m.awayGoals != null &&
+        m.date > afterDate,
+    )
+    .map((m) => ({
+      date: m.date,
+      home: m.home.name,
+      away: m.away.name,
+      homeGoals: m.homeGoals!,
+      awayGoals: m.awayGoals!,
+      competition: 'FIFA World Cup',
+      neutral: true,
+    }))
 }
