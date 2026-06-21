@@ -32,11 +32,9 @@ jobs:
         # en el repo, se inyecta en el build y se activa la columna de edge.
         env:
           VITE_ODDS_API_KEY: ${{ secrets.VITE_ODDS_API_KEY }}
+      # Requiere que Pages esté en modo "GitHub Actions":
+      # Settings → Pages → Build and deployment → Source → GitHub Actions.
       - uses: actions/configure-pages@v5
-        # Habilita Pages automáticamente en el primer despliegue (Source = GitHub Actions),
-        # así no hay que tocar la configuración del repo a mano.
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
