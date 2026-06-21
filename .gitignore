@@ -1,0 +1,37 @@
+# dependencias
+node_modules
+.pnp
+.pnp.js
+
+# build
+dist
+dist-ssr
+*.local
+*.tsbuildinfo
+
+# claude code (config local)
+.claude/settings.local.json
+
+# entorno / secretos (NUNCA commitear claves)
+.env
+.env.*
+!.env.example
+
+# editor / sistema
+.DS_Store
+Thumbs.db
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# vitest
+coverage

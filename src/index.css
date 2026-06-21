@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-pitch-950 text-slate-100 antialiased;
+    font-feature-settings: 'tnum' 1; /* tabular numbers para alinear los % */
+  }
+}
+
+@layer utilities {
+  /* oculta scrollbars horizontales en las pestañas en móvil */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

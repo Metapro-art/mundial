@@ -1,0 +1,61 @@
+[
+  { "name": "Mexico", "es": "México", "iso2": "mx", "fifa": "MEX", "emoji": "🇲🇽", "group": "A", "confed": "CONCACAF", "aliases": [] },
+  { "name": "South Africa", "es": "Sudáfrica", "iso2": "za", "fifa": "RSA", "emoji": "🇿🇦", "group": "A", "confed": "CAF", "aliases": [] },
+  { "name": "South Korea", "es": "Corea del Sur", "iso2": "kr", "fifa": "KOR", "emoji": "🇰🇷", "group": "A", "confed": "AFC", "aliases": ["Korea Republic", "Korea, South", "Korea DPR"] },
+  { "name": "Czech Republic", "es": "República Checa", "iso2": "cz", "fifa": "CZE", "emoji": "🇨🇿", "group": "A", "confed": "UEFA", "aliases": ["Czechia"] },
+
+  { "name": "Canada", "es": "Canadá", "iso2": "ca", "fifa": "CAN", "emoji": "🇨🇦", "group": "B", "confed": "CONCACAF", "aliases": [] },
+  { "name": "Bosnia & Herzegovina", "es": "Bosnia y Herzegovina", "iso2": "ba", "fifa": "BIH", "emoji": "🇧🇦", "group": "B", "confed": "UEFA", "aliases": ["Bosnia and Herzegovina", "Bosnia-Herzegovina"] },
+  { "name": "Qatar", "es": "Catar", "iso2": "qa", "fifa": "QAT", "emoji": "🇶🇦", "group": "B", "confed": "AFC", "aliases": [] },
+  { "name": "Switzerland", "es": "Suiza", "iso2": "ch", "fifa": "SUI", "emoji": "🇨🇭", "group": "B", "confed": "UEFA", "aliases": [] },
+
+  { "name": "Brazil", "es": "Brasil", "iso2": "br", "fifa": "BRA", "emoji": "🇧🇷", "group": "C", "confed": "CONMEBOL", "aliases": [] },
+  { "name": "Morocco", "es": "Marruecos", "iso2": "ma", "fifa": "MAR", "emoji": "🇲🇦", "group": "C", "confed": "CAF", "aliases": [] },
+  { "name": "Haiti", "es": "Haití", "iso2": "ht", "fifa": "HAI", "emoji": "🇭🇹", "group": "C", "confed": "CONCACAF", "aliases": [] },
+  { "name": "Scotland", "es": "Escocia", "iso2": "gb-sct", "fifa": "SCO", "emoji": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "group": "C", "confed": "UEFA", "aliases": [] },
+
+  { "name": "USA", "es": "Estados Unidos", "iso2": "us", "fifa": "USA", "emoji": "🇺🇸", "group": "D", "confed": "CONCACAF", "aliases": ["United States", "United States of America"] },
+  { "name": "Paraguay", "es": "Paraguay", "iso2": "py", "fifa": "PAR", "emoji": "🇵🇾", "group": "D", "confed": "CONMEBOL", "aliases": [] },
+  { "name": "Australia", "es": "Australia", "iso2": "au", "fifa": "AUS", "emoji": "🇦🇺", "group": "D", "confed": "AFC", "aliases": [] },
+  { "name": "Turkey", "es": "Turquía", "iso2": "tr", "fifa": "TUR", "emoji": "🇹🇷", "group": "D", "confed": "UEFA", "aliases": ["Türkiye", "Turkiye"] },
+
+  { "name": "Germany", "es": "Alemania", "iso2": "de", "fifa": "GER", "emoji": "🇩🇪", "group": "E", "confed": "UEFA", "aliases": ["West Germany"] },
+  { "name": "Curaçao", "es": "Curazao", "iso2": "cw", "fifa": "CUW", "emoji": "🇨🇼", "group": "E", "confed": "CONCACAF", "aliases": ["Curacao", "Netherlands Antilles"] },
+  { "name": "Ivory Coast", "es": "Costa de Marfil", "iso2": "ci", "fifa": "CIV", "emoji": "🇨🇮", "group": "E", "confed": "CAF", "aliases": ["Cote d'Ivoire", "Côte d'Ivoire"] },
+  { "name": "Ecuador", "es": "Ecuador", "iso2": "ec", "fifa": "ECU", "emoji": "🇪🇨", "group": "E", "confed": "CONMEBOL", "aliases": [] },
+
+  { "name": "Netherlands", "es": "Países Bajos", "iso2": "nl", "fifa": "NED", "emoji": "🇳🇱", "group": "F", "confed": "UEFA", "aliases": ["Holland"] },
+  { "name": "Japan", "es": "Japón", "iso2": "jp", "fifa": "JPN", "emoji": "🇯🇵", "group": "F", "confed": "AFC", "aliases": [] },
+  { "name": "Sweden", "es": "Suecia", "iso2": "se", "fifa": "SWE", "emoji": "🇸🇪", "group": "F", "confed": "UEFA", "aliases": [] },
+  { "name": "Tunisia", "es": "Túnez", "iso2": "tn", "fifa": "TUN", "emoji": "🇹🇳", "group": "F", "confed": "CAF", "aliases": [] },
+
+  { "name": "Belgium", "es": "Bélgica", "iso2": "be", "fifa": "BEL", "emoji": "🇧🇪", "group": "G", "confed": "UEFA", "aliases": [] },
+  { "name": "Egypt", "es": "Egipto", "iso2": "eg", "fifa": "EGY", "emoji": "🇪🇬", "group": "G", "confed": "CAF", "aliases": [] },
+  { "name": "Iran", "es": "Irán", "iso2": "ir", "fifa": "IRN", "emoji": "🇮🇷", "group": "G", "confed": "AFC", "aliases": ["IR Iran"] },
+  { "name": "New Zealand", "es": "Nueva Zelanda", "iso2": "nz", "fifa": "NZL", "emoji": "🇳🇿", "group": "G", "confed": "OFC", "aliases": [] },
+
+  { "name": "Spain", "es": "España", "iso2": "es", "fifa": "ESP", "emoji": "🇪🇸", "group": "H", "confed": "UEFA", "aliases": [] },
+  { "name": "Cape Verde", "es": "Cabo Verde", "iso2": "cv", "fifa": "CPV", "emoji": "🇨🇻", "group": "H", "confed": "CAF", "aliases": ["Cabo Verde"] },
+  { "name": "Saudi Arabia", "es": "Arabia Saudita", "iso2": "sa", "fifa": "KSA", "emoji": "🇸🇦", "group": "H", "confed": "AFC", "aliases": [] },
+  { "name": "Uruguay", "es": "Uruguay", "iso2": "uy", "fifa": "URU", "emoji": "🇺🇾", "group": "H", "confed": "CONMEBOL", "aliases": [] },
+
+  { "name": "France", "es": "Francia", "iso2": "fr", "fifa": "FRA", "emoji": "🇫🇷", "group": "I", "confed": "UEFA", "aliases": [] },
+  { "name": "Senegal", "es": "Senegal", "iso2": "sn", "fifa": "SEN", "emoji": "🇸🇳", "group": "I", "confed": "CAF", "aliases": [] },
+  { "name": "Iraq", "es": "Irak", "iso2": "iq", "fifa": "IRQ", "emoji": "🇮🇶", "group": "I", "confed": "AFC", "aliases": [] },
+  { "name": "Norway", "es": "Noruega", "iso2": "no", "fifa": "NOR", "emoji": "🇳🇴", "group": "I", "confed": "UEFA", "aliases": [] },
+
+  { "name": "Argentina", "es": "Argentina", "iso2": "ar", "fifa": "ARG", "emoji": "🇦🇷", "group": "J", "confed": "CONMEBOL", "aliases": [] },
+  { "name": "Algeria", "es": "Argelia", "iso2": "dz", "fifa": "ALG", "emoji": "🇩🇿", "group": "J", "confed": "CAF", "aliases": [] },
+  { "name": "Austria", "es": "Austria", "iso2": "at", "fifa": "AUT", "emoji": "🇦🇹", "group": "J", "confed": "UEFA", "aliases": [] },
+  { "name": "Jordan", "es": "Jordania", "iso2": "jo", "fifa": "JOR", "emoji": "🇯🇴", "group": "J", "confed": "AFC", "aliases": [] },
+
+  { "name": "Portugal", "es": "Portugal", "iso2": "pt", "fifa": "POR", "emoji": "🇵🇹", "group": "K", "confed": "UEFA", "aliases": [] },
+  { "name": "DR Congo", "es": "RD Congo", "iso2": "cd", "fifa": "COD", "emoji": "🇨🇩", "group": "K", "confed": "CAF", "aliases": ["Congo DR", "DR Congo", "Congo-Kinshasa", "Democratic Republic of the Congo", "Zaire"] },
+  { "name": "Uzbekistan", "es": "Uzbekistán", "iso2": "uz", "fifa": "UZB", "emoji": "🇺🇿", "group": "K", "confed": "AFC", "aliases": [] },
+  { "name": "Colombia", "es": "Colombia", "iso2": "co", "fifa": "COL", "emoji": "🇨🇴", "group": "K", "confed": "CONMEBOL", "aliases": [] },
+
+  { "name": "England", "es": "Inglaterra", "iso2": "gb-eng", "fifa": "ENG", "emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "group": "L", "confed": "UEFA", "aliases": [] },
+  { "name": "Croatia", "es": "Croacia", "iso2": "hr", "fifa": "CRO", "emoji": "🇭🇷", "group": "L", "confed": "UEFA", "aliases": [] },
+  { "name": "Ghana", "es": "Ghana", "iso2": "gh", "fifa": "GHA", "emoji": "🇬🇭", "group": "L", "confed": "CAF", "aliases": [] },
+  { "name": "Panama", "es": "Panamá", "iso2": "pa", "fifa": "PAN", "emoji": "🇵🇦", "group": "L", "confed": "CONCACAF", "aliases": [] }
+]
