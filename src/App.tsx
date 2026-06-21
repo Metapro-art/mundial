@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Match, WorldCupData } from './data/types'
 import { loadWorldCup, playedResultsAfter } from './data/fixtures'
+import {
+  oddsEnabled,
+  fetchWorldCupFixtures,
+  resolveMatchOdds,
+  teamIdMap,
+  type FixtureOdds,
+} from './data/odds'
 import type { Model, Prediction } from './model'
 
 type PredictFn = (model: Model, home: string, away: string) => Prediction
@@ -72,6 +79,22 @@ export default function App() {
     if (!selected.home.known || !selected.away.known) return null
     return predictRef.current(model, selected.home.name, selected.away.name)
   }, [selected, model])
+
+  // --- Cuotas (Fase 3, opcional): solo si VITE_ODDS_API_KEY está configurada.
+  const [oddsFixtures, setOddsFixtures] = useState<FixtureOdds[]>([])
+  const teamIds = useMemo(() => teamIdMap(), [])
+
+  useEffect(() => {
+    if (status !== 'ready' || !oddsEnabled()) return
+    const ctrl = new AbortController()
+    fetchWorldCupFixtures(ctrl.signal).then(setOddsFixtures)
+    return () => ctrl.abort()
+  }, [status])
+
+  const matchOdds = useMemo(() => {
+    if (!selected || oddsFixtures.length === 0) return null
+    return resolveMatchOdds(selected, oddsFixtures, teamIds)
+  }, [selected, oddsFixtures, teamIds])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pitch-950 to-pitch-900">
@@ -160,7 +183,12 @@ export default function App() {
 
       {selected && (
         <MatchPanel match={selected} onClose={() => setSelected(null)}>
-          <MarketsView match={selected} prediction={prediction} status={modelStatus} />
+          <MarketsView
+            match={selected}
+            prediction={prediction}
+            status={modelStatus}
+            odds={matchOdds}
+          />
         </MatchPanel>
       )}
     </div>

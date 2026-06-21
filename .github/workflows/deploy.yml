@@ -1,0 +1,48 @@
+name: Deploy a GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Permisos que necesita el despliegue a Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un despliegue a la vez; cancela los anteriores en curso
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        # La app funciona sin cuotas; si defines el secreto VITE_ODDS_API_KEY
+        # en el repo, se inyecta en el build y se activa la columna de edge.
+        env:
+          VITE_ODDS_API_KEY: ${{ secrets.VITE_ODDS_API_KEY }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

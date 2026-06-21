@@ -1,9 +1,57 @@
 import type { Match } from '../data/types'
+import type { MatchOdds } from '../data/odds'
 import type { Prediction } from '../model/types'
 import { MarketBar, TwoWay } from './MarketBar'
+import { devig } from '../model/value'
+import { pct } from '../lib/format'
 import type { ReactNode } from 'react'
 
 type ModelStatus = 'idle' | 'loading' | 'ready' | 'error'
+
+/** 1X2 con tres columnas: prob. modelo / prob. implícita / edge (Fase 3). */
+function OneXTwoWithEdge({
+  rows,
+  odds,
+}: {
+  rows: { label: string; model: number }[]
+  odds: MatchOdds
+}) {
+  const implied = devig([odds.home, odds.draw, odds.away])
+  return (
+    <div>
+      <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-3 text-[11px] uppercase tracking-wide text-slate-500">
+        <span />
+        <span className="text-right">Modelo</span>
+        <span className="text-right">Implíc.</span>
+        <span className="text-right">Edge</span>
+      </div>
+      {rows.map((r, i) => {
+        const edge = r.model - implied[i]
+        return (
+          <div
+            key={r.label}
+            className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-x-3 border-t border-white/5 py-1.5 text-sm"
+          >
+            <span className="truncate text-slate-200">{r.label}</span>
+            <span className="text-right tabular-nums text-slate-300">{pct(r.model)}</span>
+            <span className="text-right tabular-nums text-slate-400">{pct(implied[i])}</span>
+            <span
+              className={`text-right font-semibold tabular-nums ${
+                edge > 0.005 ? 'text-emerald-400' : edge < -0.005 ? 'text-rose-400/80' : 'text-slate-500'
+              }`}
+            >
+              {edge > 0 ? '+' : ''}
+              {pct(edge)}
+            </span>
+          </div>
+        )
+      })}
+      <p className="mt-1.5 text-[11px] text-slate-500">
+        Cuotas: {odds.bookmaker} · edge verde = valor a favor del modelo
+      </p>
+    </div>
+  )
+}
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -22,10 +70,12 @@ export function MarketsView({
   match,
   prediction,
   status,
+  odds,
 }: {
   match: Match
   prediction: Prediction | null
   status: ModelStatus
+  odds?: MatchOdds | null
 }) {
   if (!match.home.known || !match.away.known) {
     return <Info>Las probabilidades aparecerán cuando se conozcan ambas selecciones.</Info>
@@ -66,11 +116,24 @@ export function MarketsView({
         <div className="col-span-2 text-[11px] text-slate-500">{hostNote}</div>
       </div>
 
-      {/* 1X2 */}
+      {/* 1X2 (con columna de edge si hay cuotas) */}
       <Section title="Resultado (1X2)">
-        <MarketBar label={home} value={oneXtwo.home} highlight={oneXtwo.home === maxOutcome} />
-        <MarketBar label="Empate" value={oneXtwo.draw} highlight={oneXtwo.draw === maxOutcome} />
-        <MarketBar label={away} value={oneXtwo.away} highlight={oneXtwo.away === maxOutcome} />
+        {odds ? (
+          <OneXTwoWithEdge
+            rows={[
+              { label: home, model: oneXtwo.home },
+              { label: 'Empate', model: oneXtwo.draw },
+              { label: away, model: oneXtwo.away },
+            ]}
+            odds={odds}
+          />
+        ) : (
+          <>
+            <MarketBar label={home} value={oneXtwo.home} highlight={oneXtwo.home === maxOutcome} />
+            <MarketBar label="Empate" value={oneXtwo.draw} highlight={oneXtwo.draw === maxOutcome} />
+            <MarketBar label={away} value={oneXtwo.away} highlight={oneXtwo.away === maxOutcome} />
+          </>
+        )}
       </Section>
 
       {/* Over / Under */}

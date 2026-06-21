@@ -69,8 +69,10 @@ scripts/        generadores de datos (corpus histórico, snapshot)
 2. **Histórico internacional** (para el modelo) —
    [`martj42/international_results`](https://github.com/martj42/international_results)
    (`results.csv`, 1872→hoy, sin key). Ver más abajo cómo regenerar el corpus.
-3. **(Fase 3, opcional) Cuotas** — OddsPapi free tier, detrás de `VITE_ODDS_API_KEY`.
+3. **(Fase 3, opcional) Cuotas** — [OddsPapi](https://oddspapi.io) free tier
+   (250 req/mes, incluye Pinnacle), detrás de `VITE_ODDS_API_KEY`.
    Si la variable no existe, la app funciona igual sin la columna de cuotas.
+   Ver «Cuotas y edge» más abajo.
 
 ### Actualizar el snapshot de fixtures
 
@@ -106,11 +108,42 @@ El modelo lee de `src/data/intl_results.json` y **recalcula solo** al cargar la 
 
 ---
 
+## 💰 Cuotas y edge (Fase 3, opcional)
+
+La app calcula probabilidades sin depender de cuotas. Si además quieres comparar contra
+el mercado y ver el **edge** (`edge = prob_modelo − prob_implícita_sin_vig`):
+
+1. Crea una cuenta gratis en [OddsPapi](https://oddspapi.io) (free tier: 250 req/mes,
+   incluye Pinnacle).
+2. Copia `.env.example` a `.env` y rellena:
+   - `VITE_ODDS_API_KEY` — tu clave.
+   - `VITE_ODDS_TOURNAMENT_IDS` — id(s) del Mundial 2026 en OddsPapi.
+   - `VITE_ODDS_TEAM_IDS` — mapa JSON `nombre_canónico → participantId` (necesario para
+     emparejar de forma fiable; los partidos simultáneos no se distinguen por la hora).
+3. `npm run dev`. En el panel de un partido, el mercado **1X2** mostrará tres columnas
+   (modelo / implícita / edge) y resaltará en **verde** el edge positivo.
+
+Sin estas variables, no se hace ninguna llamada y la app se ve idéntica a la Fase 2.
+La clave vive solo en `.env` (ignorado por git) o, en el deploy, como *secret*
+`VITE_ODDS_API_KEY` del repositorio. **Nunca se commitea.**
+
+> El de-vig quita el margen de la casa repartiendo las probabilidades implícitas para
+> que sumen 1 (`src/model/value.ts`).
+
+---
+
 ## 🌐 Deploy a GitHub Pages
 
 El repo se llama `mundial`, así que `vite.config.ts` usa `base: '/mundial/'` en build.
-El workflow de GitHub Actions (`.github/workflows/deploy.yml`, Fase de deploy) publica
-`dist/` en Pages en cada push a `master`.
+El workflow de GitHub Actions (`.github/workflows/deploy.yml`) corre los tests, hace el
+build y publica `dist/` en Pages en cada push a `master`.
+
+**Para activarlo (una sola vez):** en GitHub → *Settings → Pages → Build and deployment →
+Source* selecciona **GitHub Actions**. El siguiente push a `master` desplegará la app en
+`https://<usuario>.github.io/mundial/`.
+
+(Opcional) Para activar la columna de cuotas en producción, añade el secret
+`VITE_ODDS_API_KEY` en *Settings → Secrets and variables → Actions*.
 
 ---
 
