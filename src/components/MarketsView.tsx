@@ -1,6 +1,6 @@
 import type { Match } from '../data/types'
 import type { MatchOdds } from '../data/odds'
-import type { Prediction } from '../model/types'
+import type { Absence, Prediction } from '../model/types'
 import { MarketBar, TwoWay } from './MarketBar'
 import { devig } from '../model/value'
 import { pct } from '../lib/format'
@@ -66,6 +66,24 @@ function Info({ children }: { children: ReactNode }) {
   return <p className="py-4 text-center text-sm text-slate-400">{children}</p>
 }
 
+function absenceText(a: Absence): string {
+  const parts: string[] = []
+  if (a.attack) parts.push(`ataque −${Math.round(a.attack * 100)}%`)
+  if (a.defense) parts.push(`defensa −${Math.round(a.defense * 100)}%`)
+  return parts.join(', ')
+}
+
+function TeamAbsences({ label, list }: { label: string; list: Absence[] }) {
+  return (
+    <div className="text-slate-300">
+      <span className="text-slate-400">{label}:</span>{' '}
+      {list
+        .map((a) => `${a.player ?? 'jugador'}${absenceText(a) ? ` (${absenceText(a)})` : ''}`)
+        .join(' · ')}
+    </div>
+  )
+}
+
 export function MarketsView({
   match,
   prediction,
@@ -85,7 +103,7 @@ export function MarketsView({
     return <Info>Calculando probabilidades…</Info>
   }
 
-  const { oneXtwo, overUnder, btts, topScores, expected, elo, hostAdvantage } = prediction
+  const { oneXtwo, overUnder, btts, topScores, expected, elo, hostAdvantage, absences } = prediction
   const maxOutcome = Math.max(oneXtwo.home, oneXtwo.draw, oneXtwo.away)
   const home = match.home.label
   const away = match.away.label
@@ -115,6 +133,14 @@ export function MarketsView({
         </div>
         <div className="col-span-2 text-[11px] text-slate-500">{hostNote}</div>
       </div>
+
+      {(absences.home.length > 0 || absences.away.length > 0) && (
+        <div className="mb-4 rounded-lg border border-amber-400/20 bg-amber-400/[0.06] p-3 text-xs">
+          <div className="mb-1 font-semibold text-amber-300">Ausencias consideradas</div>
+          {absences.home.length > 0 && <TeamAbsences label={home} list={absences.home} />}
+          {absences.away.length > 0 && <TeamAbsences label={away} list={absences.away} />}
+        </div>
+      )}
 
       {/* 1X2 (con columna de edge si hay cuotas) */}
       <Section title="Resultado (1X2)">

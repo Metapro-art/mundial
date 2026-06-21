@@ -1,0 +1,13 @@
+{
+  "_comentario": "Ejemplo de formato para absences.json. Copia las entradas que necesites a src/data/absences.json (sin esta clave de comentario). Cada clave es el nombre del equipo (canónico en inglés o en español: 'France' o 'Francia'). Cada ausencia: player (opcional), attack (0..1 pérdida ofensiva), defense (0..1 pérdida defensiva), reason (opcional). Si absences.json está vacío ({}), no afecta nada.",
+
+  "France": [
+    { "player": "Kylian Mbappé", "attack": 0.12, "reason": "lesión" }
+  ],
+  "Spain": [
+    { "player": "Rodri", "attack": 0.04, "defense": 0.06, "reason": "lesión" }
+  ],
+  "Argentina": [
+    { "player": "Defensor central titular", "defense": 0.07, "reason": "suspensión" }
+  ]
+}

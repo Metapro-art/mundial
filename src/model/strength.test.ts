@@ -53,4 +53,13 @@ describe('computeStrength', () => {
     expect(attackOf(s, 'Inexistente')).toBe(1)
     expect(defenseOf(s, 'Inexistente')).toBe(1)
   })
+
+  it('un partido de Mundial pesa más que un amistoso en las fuerzas', () => {
+    const filler = [m('X', 'Y', 1, 1, '2025-06-01'), m('P', 'Q', 1, 1, '2025-06-01')]
+    const wcMatch: IntlResult = { ...m('Sc', 'Vi', 3, 0, '2025-06-01'), competition: 'FIFA World Cup' }
+    const wc = computeStrength([wcMatch, ...filler], '2025-06-01')
+    const fr = computeStrength([m('Sc', 'Vi', 3, 0, '2025-06-01'), ...filler], '2025-06-01')
+    // Mismo 3-0: con importancia de Mundial pesa más => el ataque se aleja más de 1.
+    expect(attackOf(wc, 'Sc')).toBeGreaterThan(attackOf(fr, 'Sc'))
+  })
 })

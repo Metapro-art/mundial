@@ -91,7 +91,9 @@ npm run data:fixtures   # descarga el worldcup.json actual y reescribe el snapsh
 - **`elo.ts`** — rating Elo por selección desde el corpus, con K-factor ajustado por
   importancia del partido y margen de goles.
 - **`strength.ts`** — fuerza de ataque/defensa = goles marcados/recibidos ÷ promedio del
-  corpus, con **decaimiento temporal** (half-life ~12 meses).
+  corpus, con **decaimiento temporal** (half-life ~12 meses) y **peso por importancia**
+  (un partido de Mundial pesa más que un amistoso). *Shrinkage* bayesiano para que las
+  selecciones con pocos datos no se vayan a los extremos.
 - **`dixoncoles.ts`** — λ local/visitante desde las fuerzas (mezclado con Elo), matriz de
   marcadores Poisson con corrección **Dixon-Coles** (ρ) para marcadores bajos. De la matriz
   salen 1X2, Over/Under 0.5/1.5/2.5/3.5, BTTS y los 5 marcadores más probables. La ventaja de
@@ -105,6 +107,39 @@ npm run data:intl       # descarga martj42/results.csv, filtra, normaliza nombre
 ```
 
 El modelo lee de `src/data/intl_results.json` y **recalcula solo** al cargar la app.
+
+### Partidos del Mundial 2026 ya jugados
+
+Se incluyen en el corpus (vienen en la misma fuente, martj42). Se ponderan por **recencia**
+e **importancia** (Mundial > amistoso): los 1-2 partidos del torneo **actualizan** el Elo y
+las fuerzas sobre la base de ~24 meses, **no la reemplazan** (el Elo es incremental y el
+shrinkage evita el sobreajuste al tamaño de muestra pequeño). Además, al cargar la app se
+refresca con cualquier resultado del Mundial más nuevo que el corpus (sin duplicar).
+
+### Ajuste manual por ausencias (opcional)
+
+`src/data/absences.json` permite restar fuerza a un equipo por titulares ausentes
+(lesión/suspensión). **Si está vacío (`{}`), no afecta nada.** Formato (ver
+`src/data/absences.example.json`):
+
+```jsonc
+{
+  "France": [
+    { "player": "Mbappé", "attack": 0.12, "reason": "lesión" }
+  ],
+  "Spain": [
+    { "player": "Rodri", "attack": 0.04, "defense": 0.06, "reason": "lesión" }
+  ]
+}
+```
+
+- La clave es el equipo (en inglés o español: `"France"` o `"Francia"`).
+- `attack` (0..1) = pérdida ofensiva → reduce su λ: `λ_equipo × (1 − attack)`.
+- `defense` (0..1) = pérdida defensiva → el rival marca más: `λ_rival × (1 + defense)`.
+- Los impactos de varias ausencias se suman (con un tope) y se aplican solo a ese partido.
+
+El panel del partido muestra las ausencias consideradas. *(No se integran stats por jugador
+desde APIs de pago ni scraping: este ajuste es manual a propósito.)*
 
 ---
 

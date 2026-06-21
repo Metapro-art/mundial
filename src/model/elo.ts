@@ -1,5 +1,6 @@
 import type { IntlResult } from '../data/types'
 import { MODEL } from './config'
+import { classifyCompetition } from './competitions'
 
 // Elo de selecciones al estilo "World Football Elo":
 // - K base según la importancia del torneo.
@@ -10,23 +11,7 @@ export type EloRatings = Map<string, number>
 
 /** Importancia del partido → K base. */
 export function competitionWeight(tournament: string): number {
-  const t = tournament.toLowerCase()
-  const k = MODEL.kBase
-  if (t.includes('world cup') && t.includes('qualif')) return k.qualifier
-  if (t.includes('world cup')) return k.worldCup
-  if (t.includes('qualif')) return k.qualifier
-  if (t.includes('nations league')) return k.nationsLeague
-  if (t.includes('friendly')) return k.friendly
-  if (
-    t.includes('euro') ||
-    t.includes('copa am') || // Copa América
-    t.includes('cup of nations') || // African Cup of Nations
-    t.includes('asian cup') ||
-    t.includes('gold cup') ||
-    t.includes('confederations')
-  )
-    return k.continentalFinals
-  return k.default
+  return MODEL.kBase[classifyCompetition(tournament)]
 }
 
 /** Multiplicador por margen de goles (World Football Elo). */

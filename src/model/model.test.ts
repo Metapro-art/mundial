@@ -28,6 +28,8 @@ describe('predictMatch (corpus real)', () => {
     expect(p.expected.home).toBeGreaterThan(0)
     expect(p.expected.away).toBeGreaterThan(0)
     expect(p.topScores).toHaveLength(5)
+    // sin absences.json poblado, no hay ausencias
+    expect(p.absences).toEqual({ home: [], away: [] })
   })
 
   it('es determinista', () => {

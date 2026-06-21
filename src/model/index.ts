@@ -4,10 +4,12 @@ import { computeElo, getRating, type EloRatings } from './elo'
 import { computeStrength, attackOf, defenseOf, type Strength } from './strength'
 import { markets } from './dixoncoles'
 import { MODEL } from './config'
+import { absenceImpact, adjustLambdas, getAbsences } from './absences'
 import type { Prediction } from './types'
 
 export * from './types'
 export { updateElo, computeElo, getRating } from './elo'
+export { getAbsences, absenceImpact } from './absences'
 export { MODEL } from './config'
 
 const CORPUS = intlResults as IntlResult[]
@@ -92,6 +94,13 @@ export function predictMatch(
     hostAdvantage = 'away'
   }
 
+  // 4) ajuste manual opcional por ausencias (lesiones/suspensiones).
+  //    Reduce el ataque del equipo afectado y/o debilita su defensa (el rival
+  //    marca más). Si absences.json está vacío, los impactos son 0 y no cambia nada.
+  const absHome = absenceImpact(home)
+  const absAway = absenceImpact(away)
+  ;[lamH, lamA] = adjustLambdas(lamH, lamA, absHome, absAway)
+
   lamH = Math.max(MODEL.minLambda, lamH)
   lamA = Math.max(MODEL.minLambda, lamA)
 
@@ -101,6 +110,7 @@ export function predictMatch(
     away,
     elo: { home: eH, away: eA },
     hostAdvantage,
+    absences: { home: getAbsences(home), away: getAbsences(away) },
   }
 }
 

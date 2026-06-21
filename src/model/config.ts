@@ -7,6 +7,25 @@ export const MODEL = {
   halfLifeMonths: 12,
   /** Partidos "previos" hacia la media (shrinkage) para selecciones con pocos datos. */
   priorGames: 4,
+  /**
+   * Peso de importancia por tipo de partido para las FUERZAS (multiplica al peso
+   * por recencia). Un partido de Mundial pesa más que un amistoso. Valores
+   * moderados a propósito: junto con el shrinkage y la base de ~24 meses, los
+   * 1-2 partidos del torneo ACTUALIZAN las fuerzas, no las reemplazan.
+   * (El Elo ya pondera la importancia con su K-factor; aquí no se toca.)
+   */
+  strengthImportance: {
+    worldCup: 2.0,
+    continentalFinals: 1.8,
+    qualifier: 1.5,
+    nationsLeague: 1.5,
+    friendly: 1.0,
+    default: 1.2,
+  },
+
+  // --- Ajuste manual por ausencias (absences.ts) ---
+  /** Tope al impacto acumulado (ataque o defensa) de las ausencias de un equipo. */
+  absenceMaxImpact: 0.5,
 
   // --- Elo (elo.ts) ---
   eloInitial: 1500,

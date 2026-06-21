@@ -1,5 +1,6 @@
 import type { IntlResult } from '../data/types'
 import { MODEL } from './config'
+import { classifyCompetition } from './competitions'
 
 // Fuerza de ataque/defensa por selección, relativa a la media del corpus, con
 // decaimiento temporal (los partidos recientes pesan más) y shrinkage hacia 1.0
@@ -41,7 +42,9 @@ export function computeStrength(results: IntlResult[], refDate?: string): Streng
     map.set(key, (map.get(key) ?? 0) + v)
 
   for (const m of results) {
-    const w = decayWeight(m.date, refMs, half)
+    // peso = recencia (decaimiento) × importancia del partido (Mundial > amistoso)
+    const importance = MODEL.strengthImportance[classifyCompetition(m.competition)]
+    const w = decayWeight(m.date, refMs, half) * importance
     if (w <= 0) continue
     bump(scored, m.home, w * m.homeGoals)
     bump(conceded, m.home, w * m.awayGoals)
